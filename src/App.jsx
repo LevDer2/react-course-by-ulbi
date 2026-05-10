@@ -1,122 +1,74 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+// ! IMPORTS
+import React, { useRef, useState } from "react";
+import "./styles/App.css";
+import PostItem from "./components/PostItem";
+import PostList from "./components/PostList";
+import MyButton from "./UI/button/MyButton";
+import MyInput from "./UI/input/MyInput";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  // ! Firsts posts
+  const [posts, setPosts] = useState([
+    {
+      id: 1,
+      title: "Javascript",
+      body: "Javascript - язык программирования",
+    },
+    {
+      id: 2,
+      title: "Javascript 2",
+      body: "Javascript - язык программирования",
+    },
+    {
+      id: 3,
+      title: "Javascript 3",
+      body: "Javascript - язык программирования",
+    },
+  ]);
 
+  // ! State
+  // const bodyInputRef = useRef();
+  // const [title, setTitle] = useState("");
+  // const [body, setBody] = useState("");
+
+  const [post, setPost] = useState({
+    title: "",
+    body: "",
+  });
+  // ! Function
+  const addNewPost = (e) => {
+    e.preventDefault();
+    setPosts([...posts, { ...post, id: Date.now() }]);
+    setPost({ title: "", body: "" });
+  };
+  // ! DOM
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <div className="App">
+      <form>
+        {/*! If the value goes to the state it is caling Managed Component !*/}
+        <MyInput
+          type="text"
+          placeholder="Title of your post"
+          value={post.title}
+          onChange={(e) => setPost({ ...post, title: e.target.value })}
+        />
+        <MyInput
+          type="text"
+          placeholder="Body of your post"
+          value={post.body}
+          onChange={(e) => setPost({ ...post, body: e.target.value })}
+        />
+        {/* If we write this code from useRef it is call Not Maneged Component */}
+        {/* <MyInput
+          type="text"
+          placeholder="Body of your post"
+          ref={bodyInputRef}
+        /> */}
+        <MyButton type="submit" onClick={addNewPost}>
+          Create a post
+        </MyButton>
+      </form>
+      <PostList posts={posts} title={"Lists"} />
+    </div>
+  );
 }
-
-export default App
