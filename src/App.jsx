@@ -5,6 +5,8 @@ import PostItem from "./components/PostItem";
 import PostList from "./components/PostList";
 import MyButton from "./UI/button/MyButton";
 import MyInput from "./UI/input/MyInput";
+import PostForm from "./components/PostForm";
+import MySelect from "./UI/select/MySelect";
 
 export default function App() {
   // ! Firsts posts
@@ -31,44 +33,31 @@ export default function App() {
   // const [title, setTitle] = useState("");
   // const [body, setBody] = useState("");
 
-  const [post, setPost] = useState({
-    title: "",
-    body: "",
-  });
   // ! Function
-  const addNewPost = (e) => {
-    e.preventDefault();
-    setPosts([...posts, { ...post, id: Date.now() }]);
-    setPost({ title: "", body: "" });
+  const createNewPost = (newPost) => {
+    setPosts([...posts, newPost]);
+  };
+
+  // ! Get a post from childrens component
+  const removePost = (post) => {
+    setPosts(posts.filter((p) => p.id !== post.id));
   };
   // ! DOM
   return (
     <div className="App">
-      <form>
-        {/*! If the value goes to the state it is caling Managed Component !*/}
-        <MyInput
-          type="text"
-          placeholder="Title of your post"
-          value={post.title}
-          onChange={(e) => setPost({ ...post, title: e.target.value })}
-        />
-        <MyInput
-          type="text"
-          placeholder="Body of your post"
-          value={post.body}
-          onChange={(e) => setPost({ ...post, body: e.target.value })}
-        />
-        {/* If we write this code from useRef it is call Not Maneged Component */}
-        {/* <MyInput
-          type="text"
-          placeholder="Body of your post"
-          ref={bodyInputRef}
-        /> */}
-        <MyButton type="submit" onClick={addNewPost}>
-          Create a post
-        </MyButton>
-      </form>
-      <PostList posts={posts} title={"Lists"} />
+      <PostForm create={createNewPost} />
+      <hr style={{margin: "15px 0"}}/>
+      <div>
+        <MySelect options={[
+          {value: "title", name: "Sort by titles"},
+          {value: "body", name: "Sort by main texts"}
+        ]} defaultOption="Sort by..."/>
+      </div>
+      {posts.length !== 0 ? (
+        <PostList remove={removePost} posts={posts} title={"Lists"} />
+      ) : (
+        <h1 style={{ textAlign: "center" }}>Please create new posts!</h1>
+      )}
     </div>
   );
 }
